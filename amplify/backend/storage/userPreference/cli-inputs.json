@@ -1,0 +1,10 @@
+{
+  "resourceName": "userPreference",
+  "tableName": "userPreference",
+  "partitionKey": {
+    "fieldName": "email_id",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

@@ -1,0 +1,39 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-smartpantry-dev-04136-authRole",
+      "UnauthRoleArn": "arn:aws:iam::702549225640:role/amplify-smartpantry-dev-04136-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::702549225640:role/amplify-smartpantry-dev-04136-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
+      "UnauthRoleName": "amplify-smartpantry-dev-04136-unauthRole",
+      "StackName": "amplify-smartpantry-dev-04136",
+      "StackId": "arn:aws:cloudformation:us-west-1:702549225640:stack/amplify-smartpantry-dev-04136/201ab750-8525-11ee-ac05-06ce52292179",
+      "AmplifyAppId": "dtut8i3i124b5",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-smartpantry-dev-04136-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    },
+    "categories": {
+      "auth": {
+        "smartpantryc3c811e3": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dtut8i3i124b5",
+          "type": "manual"
+        }
+      },
+      "function": {
+        "smartpantrye02e3cf0": {
+          "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
+          "s3Key": "amplify-builds/smartpantrye02e3cf0-4f515666306b37314c61-build.zip"
+        }
+      },
+      "api": {
+        "userpreferenceapi": {}
+      },
+      "storage": {
+        "userPreference": {}
+      }
+    }
+  }
+}

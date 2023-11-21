@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "paths": {
+    "/preference": {
+      "name": "/preference",
+      "lambdaFunction": "smartpantrye02e3cf0",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    }
+  }
+}
