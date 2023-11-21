@@ -55,6 +55,7 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Enter Password", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 Amplify.Auth.signIn(
                         email,
                         password,
