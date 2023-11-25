@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.amplifyframework.core.Amplify;
 
+import java.util.Objects;
+
 public class Login extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
     Button loginButton;
@@ -24,6 +27,8 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         // Initialize UI elements
         editTextEmail = findViewById(R.id.Email);
@@ -61,12 +66,23 @@ public class Login extends AppCompatActivity {
                         password,
                         result -> {
                             Log.i("AuthQuickstart", result.isSignedIn() ? "Sign in succeeded" : "Sign in not complete");
-                            Intent intent =  new Intent(getApplicationContext(), UserPreference.class);
+                            Intent intent =  new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                         },
                         error -> Log.e("AuthQuickstart", error.toString())
                 );
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(Login.this, MainActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

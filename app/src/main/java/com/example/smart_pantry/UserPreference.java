@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amplifyframework.api.rest.RestOptions;
+import com.amplifyframework.auth.AuthUserAttribute;
 import com.amplifyframework.core.Amplify;
 import com.example.smart_pantry.model.Cuisine;
 import com.example.smart_pantry.model.MealType;
@@ -30,6 +31,8 @@ public class UserPreference extends AppCompatActivity {
 
     String email = "";
     String name = "";
+
+    private static String accessToken = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,7 @@ public class UserPreference extends AppCompatActivity {
 
                 UserDetails userDetails = new UserDetails();
                 userDetails.setName(name);
-                userDetails.setEmailId(email);
+                userDetails.setEmail(email);
                 userDetails.setUserPreferenceData(preference);
 
                 RestOptions options = null;
@@ -86,7 +89,11 @@ public class UserPreference extends AppCompatActivity {
                 }
 
                 Amplify.API.post(options,
-                        response -> Log.i("MyAmplifyApp", "POST succeeded: " + response),
+                        response -> {
+                            Log.i("MyAmplifyApp", "POST succeeded: " + response);
+                            Intent intent =  new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        },
                         error -> Log.e("MyAmplifyApp", "POST failed.", error)
                 );
             }
@@ -94,5 +101,18 @@ public class UserPreference extends AppCompatActivity {
 
 
 
+    }
+
+    private void setAuthToken() {
+        Amplify.Auth.fetchUserAttributes(
+                attributes -> {
+                    for (AuthUserAttribute attribute : attributes) {
+                        Log.i("AuthDemo", "Attribute: " + attribute.getKey() + " Value: " + attribute.getValue());
+                    }
+                },
+                error -> {
+                    Log.e("AuthDemo", "Error fetching user attributes: " + error.toString());
+                }
+        );
     }
 }

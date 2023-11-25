@@ -3,14 +3,17 @@
   "paths": {
     "/preference": {
       "name": "/preference",
-      "lambdaFunction": "smartpantrye02e3cf0",
+      "lambdaFunction": "saveUserDetails",
       "permissions": {
-        "setting": "private",
+        "setting": "protected",
         "auth": [
           "create",
           "read",
           "update",
           "delete"
+        ],
+        "guest": [
+          "read"
         ]
       }
     }

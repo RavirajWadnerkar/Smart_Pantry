@@ -16,13 +16,13 @@
     "s3Key": {
       "Type": "String"
     },
-    "storageuserPreferenceName": {
+    "storageuserDetailsName": {
       "Type": "String",
-      "Default": "storageuserPreferenceName"
+      "Default": "storageuserDetailsName"
     },
-    "storageuserPreferenceArn": {
+    "storageuserDetailsArn": {
       "Type": "String",
-      "Default": "storageuserPreferenceArn"
+      "Default": "storageuserDetailsArn"
     }
   },
   "Conditions": {
@@ -55,12 +55,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "smartpantrye02e3cf0",
+            "saveUserDetails",
             {
               "Fn::Join": [
                 "",
                 [
-                  "smartpantrye02e3cf0",
+                  "saveUserDetails",
                   "-",
                   {
                     "Ref": "env"
@@ -97,12 +97,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "smartpantryLambdaRolec1700832",
+            "smartpantryLambdaRolefd018ca5",
             {
               "Fn::Join": [
                 "",
                 [
-                  "smartpantryLambdaRolec1700832",
+                  "smartpantryLambdaRolefd018ca5",
                   "-",
                   {
                     "Ref": "env"
@@ -182,14 +182,14 @@
               ],
               "Resource": [
                 {
-                  "Ref": "storageuserPreferenceArn"
+                  "Ref": "storageuserDetailsArn"
                 },
                 {
                   "Fn::Join": [
                     "/",
                     [
                       {
-                        "Ref": "storageuserPreferenceArn"
+                        "Ref": "storageuserDetailsArn"
                       },
                       "index/*"
                     ]

@@ -1,6 +1,6 @@
 {
   "api": {
-    "userpreferenceapi": {
+    "UserDetailsApi": {
       "dependsOn": [
         {
           "attributes": [
@@ -8,7 +8,7 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "smartpantrye02e3cf0"
+          "resourceName": "saveUserDetails"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -45,7 +45,7 @@
     }
   },
   "function": {
-    "smartpantrye02e3cf0": {
+    "saveUserDetails": {
       "build": true,
       "dependsOn": [
         {
@@ -58,7 +58,7 @@
             "Arn"
           ],
           "category": "storage",
-          "resourceName": "userPreference"
+          "resourceName": "userDetails"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -73,19 +73,19 @@
     }
   },
   "parameters": {
-    "AMPLIFY_function_smartpantrye02e3cf0_deploymentBucketName": {
+    "AMPLIFY_function_saveUserDetails_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "smartpantrye02e3cf0"
+          "resourceName": "saveUserDetails"
         }
       ]
     },
-    "AMPLIFY_function_smartpantrye02e3cf0_s3Key": {
+    "AMPLIFY_function_saveUserDetails_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "smartpantrye02e3cf0"
+          "resourceName": "saveUserDetails"
         }
       ]
     },
@@ -107,7 +107,7 @@
     }
   },
   "storage": {
-    "userPreference": {
+    "userDetails": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"
     }

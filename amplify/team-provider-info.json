@@ -23,16 +23,16 @@
         }
       },
       "function": {
-        "smartpantrye02e3cf0": {
+        "saveUserDetails": {
           "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
-          "s3Key": "amplify-builds/smartpantrye02e3cf0-4f515666306b37314c61-build.zip"
+          "s3Key": "amplify-builds/saveUserDetails-384142506c624c646f7a-build.zip"
         }
       },
       "api": {
-        "userpreferenceapi": {}
+        "UserDetailsApi": {}
       },
       "storage": {
-        "userPreference": {}
+        "userDetails": {}
       }
     }
   }
