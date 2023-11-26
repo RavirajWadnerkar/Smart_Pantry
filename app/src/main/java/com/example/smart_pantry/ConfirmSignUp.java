@@ -3,7 +3,6 @@ package com.example.smart_pantry;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,20 +37,39 @@ public class ConfirmSignUp extends AppCompatActivity {
         confirmOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String otpText = otp.getText().toString();
+
+                // Check if OTP field is empty
+                if (otpText.isEmpty()) {
+                    Toast.makeText(ConfirmSignUp.this, "Please enter OTP.", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 Amplify.Auth.confirmSignUp(
                         email,
-                        otp.getText().toString(),
+                        otpText,
                         result -> {
                             Log.i("AuthQuickstart", result.isSignUpComplete() ? "Confirm signUp succeeded" : "Confirm sign up not complete");
-                            Intent intent =  new Intent(getApplicationContext(), UserPreference.class);
-                            intent.putExtra("email",email);
-                            intent.putExtra("name",name);
-                            startActivity(intent);
+                            if (result.isSignUpComplete()) {
+                                Intent intent = new Intent(getApplicationContext(), UserPreference.class);
+                                intent.putExtra("email", email);
+                                intent.putExtra("name", name);
+                                startActivity(intent);
+                            } else {
+                                runOnUiThread(() -> Toast.makeText(ConfirmSignUp.this, "Sign up not complete. Please check your OTP.", Toast.LENGTH_LONG).show());
+                            }
                         },
-                        error -> Log.e("AuthQuickstart", error.toString())
+                        error -> {
+                            Log.e("AuthQuickstart", error.toString());
+                            // Display a toast message with the error on the UI thread
+                            runOnUiThread(() -> Toast.makeText(ConfirmSignUp.this, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show());
+                        }
                 );
             }
         });
+
+
+
+        
     }
 }
