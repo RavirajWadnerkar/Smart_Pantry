@@ -19,9 +19,27 @@ import com.amplifyframework.auth.AuthUserAttributeKey;
 import com.amplifyframework.auth.options.AuthSignUpOptions;
 import com.amplifyframework.core.Amplify;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.amplifyframework.auth.AuthUserAttributeKey;
+import com.amplifyframework.auth.options.AuthSignUpOptions;
+import com.amplifyframework.core.Amplify;
+
 public class Register extends AppCompatActivity {
     EditText editTextFullName, editTextEmail, editTextPassword;
     Button buttonRegister;
+    ProgressBar progressBarRegister; // Add this line for ProgressBar
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -33,27 +51,27 @@ public class Register extends AppCompatActivity {
         editTextEmail = findViewById(R.id.Email);
         editTextPassword = findViewById(R.id.Password);
         buttonRegister = findViewById(R.id.buttonRegister);
-        View textView = findViewById(R.id.loginNow);
+        progressBarRegister = findViewById(R.id.progressBarRegister); // Initialize ProgressBar here
 
+        View textView = findViewById(R.id.loginNow);
         textView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
                 finish();
-
             }
         });
 
-        // Set up the button click listener
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fullName, email, password, spinnerPreferredMeal;
+                String fullName, email, password;
 
                 fullName = String.valueOf(editTextFullName.getText());
                 email = String.valueOf(editTextEmail.getText());
                 password = String.valueOf(editTextPassword.getText());
+
                 if (TextUtils.isEmpty(fullName)){
                     Toast.makeText(Register.this, "Enter Full Name", Toast.LENGTH_SHORT).show();
                     return;
@@ -67,22 +85,26 @@ public class Register extends AppCompatActivity {
                     return;
                 }
 
+                progressBarRegister.setVisibility(View.VISIBLE); // Show the ProgressBar when registration starts
+
                 AuthSignUpOptions options = AuthSignUpOptions.builder()
                         .userAttribute(AuthUserAttributeKey.givenName(), fullName)
                         .build();
                 Amplify.Auth.signUp(email, password, options,
                         result -> {
-                    Log.i("AuthQuickStart", "Result: " + result.toString());
+                            progressBarRegister.setVisibility(View.GONE); // Hide the ProgressBar on successful registration
+                            Log.i("AuthQuickStart", "Result: " + result.toString());
                             Intent intent =  new Intent(getApplicationContext(), ConfirmSignUp.class);
-                            intent.putExtra("email",email);
-                            intent.putExtra("name",fullName);
+                            intent.putExtra("email", email);
+                            intent.putExtra("name", fullName);
                             startActivity(intent);
                         },
-                        error -> Log.e("AuthQuickStart", "Sign up failed", error)
+                        error -> {
+                            progressBarRegister.setVisibility(View.GONE); // Hide the ProgressBar on failure
+                            Log.e("AuthQuickStart", "Sign up failed", error);
+                            Toast.makeText(Register.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                        }
                 );
-
-
-
             }
         });
     }
