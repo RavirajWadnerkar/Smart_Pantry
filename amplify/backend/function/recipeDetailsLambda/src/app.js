@@ -60,18 +60,60 @@ const convertUrlType = (param, type) => {
 ************************************/
 
 app.get(path, async function(req, res) {
-  var params = {
-    TableName: tableName,
-    Select: 'ALL_ATTRIBUTES',
-  };
 
-  try {
-    const data = await ddbDocClient.send(new ScanCommand(params));
-    res.json(data.Items);
-  } catch (err) {
-    res.statusCode = 500;
-    res.json({error: 'Could not load items: ' + err.message});
+  // TODO: Replace globalIngredients with MLModel Output Ingredients Data
+  let globalIngredients = ['salt', 'wheat', 'water', 'ghee'];
+  const getAllSubsets =
+        theArray => theArray.reduce(
+          (subsets, value) => subsets.concat(
+           subsets.map(set => [value,...set])
+          ),
+          [[]]
+        );
+  const allSubset = getAllSubsets(globalIngredients);
+  const result = [];
+
+  for (let k = 1; k < allSubset.length; k++){
+    const ingredients = allSubset[k];
+    if(ingredients.length < 4){
+      continue;
+    }
+
+    let filterExpression = '';
+    for (let i = 0; i < ingredients.length; i++) {
+      filterExpression += 'contains (CleanedIngredients, :item_'+i +')';
+      if (i < ingredients.length-1){
+        filterExpression += ' and ';
+      }
+    }
+    let expressionAttributeValues = {};
+    for (let i = 0; i < ingredients.length; i++) {
+      expressionAttributeValues[':item_'+i] = ingredients[i];
+    }
+
+    var params = {
+      TableName: tableName,
+      Select: 'ALL_ATTRIBUTES',
+      FilterExpression: filterExpression,
+      ExpressionAttributeValues: expressionAttributeValues
+    };
+
+    try {
+      const {Items} = await ddbDocClient.send(new ScanCommand(params));
+      const filteredItem = Items.filter((item) => {
+        let cleanIng = item['CleanedIngredients'].split(",")
+        return cleanIng.length == ingredients.length
+        });
+        console.log(filteredItem);
+      result.push(filteredItem);
+    } catch (err) {
+      console.log({error: 'Could not load items: ' + err.message});
+       res.statusCode = 500;
+       res.json({error: 'Could not load items: ' + err.message});
+      break;
+    }
   }
+  res.json(result);
 });
 
 /************************************
