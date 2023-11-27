@@ -26,7 +26,6 @@ public class UserPreference extends AppCompatActivity {
     CheckBox veg;
     CheckBox nonVeg;
     Spinner cuisine;
-    Spinner mealType;
     Button save;
 
     String email = "";
@@ -49,18 +48,12 @@ public class UserPreference extends AppCompatActivity {
         veg = findViewById(R.id.veg);
         nonVeg = findViewById(R.id.nonveg);
         cuisine = findViewById(R.id.cuisine);
-        mealType = findViewById(R.id.mealtype);
         save = findViewById(R.id.savepreference);
 
         ArrayAdapter<CharSequence> cuisineAdapter = ArrayAdapter.createFromResource(this,
                 R.array.cuisine, android.R.layout.simple_spinner_item);
         cuisineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cuisine.setAdapter(cuisineAdapter);
-
-        ArrayAdapter<CharSequence> mealAdapter = ArrayAdapter.createFromResource(this,
-                R.array.meal_type, android.R.layout.simple_spinner_item);
-        mealAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mealType.setAdapter(mealAdapter);
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +64,7 @@ public class UserPreference extends AppCompatActivity {
                 preference.setVeg(veg.isChecked());
                 preference.setNonVeg(nonVeg.isChecked());
                 preference.setCuisine(Cuisine.valueOf(cuisine.getSelectedItem().toString()));
-                preference.setMealType(MealType.valueOf(mealType.getSelectedItem().toString()));
+                preference.setMealType(MealType.valueOf("DINNER"));
 
                 UserDetails userDetails = new UserDetails();
                 userDetails.setName(name);
@@ -101,18 +94,5 @@ public class UserPreference extends AppCompatActivity {
 
 
 
-    }
-
-    private void setAuthToken() {
-        Amplify.Auth.fetchUserAttributes(
-                attributes -> {
-                    for (AuthUserAttribute attribute : attributes) {
-                        Log.i("AuthDemo", "Attribute: " + attribute.getKey() + " Value: " + attribute.getValue());
-                    }
-                },
-                error -> {
-                    Log.e("AuthDemo", "Error fetching user attributes: " + error.toString());
-                }
-        );
     }
 }

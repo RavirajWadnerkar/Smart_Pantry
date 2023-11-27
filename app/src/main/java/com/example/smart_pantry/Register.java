@@ -28,6 +28,10 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         editTextFullName = findViewById(R.id.FullName);
         editTextEmail = findViewById(R.id.Email);
         editTextPassword = findViewById(R.id.Password);
