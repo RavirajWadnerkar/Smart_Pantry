@@ -1,5 +1,19 @@
 {
   "api": {
+    "RecipeDetailsApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "recipeDetailsLambda"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "UserDetailsApi": {
       "dependsOn": [
         {
@@ -45,6 +59,25 @@
     }
   },
   "function": {
+    "recipeDetailsLambda": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "recipeDatabase"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "saveUserDetails": {
       "build": true,
       "dependsOn": [
@@ -73,6 +106,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_recipeDetailsLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "recipeDetailsLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_recipeDetailsLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "recipeDetailsLambda"
+        }
+      ]
+    },
     "AMPLIFY_function_saveUserDetails_deploymentBucketName": {
       "usedBy": [
         {
@@ -107,6 +156,10 @@
     }
   },
   "storage": {
+    "recipeDatabase": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
     "userDetails": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"

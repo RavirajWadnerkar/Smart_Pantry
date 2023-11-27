@@ -13,26 +13,32 @@
       "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-smartpantry-dev-04136-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
-      "auth": {
-        "smartpantryc3c811e3": {}
-      },
       "hosting": {
         "amplifyhosting": {
           "appId": "dtut8i3i124b5",
           "type": "manual"
         }
       },
+      "auth": {
+        "smartpantryc3c811e3": {}
+      },
       "function": {
         "saveUserDetails": {
           "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
           "s3Key": "amplify-builds/saveUserDetails-384142506c624c646f7a-build.zip"
+        },
+        "recipeDetailsLambda": {
+          "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
+          "s3Key": "amplify-builds/recipeDetailsLambda-74304e4359472b6e4a51-build.zip"
         }
       },
-      "api": {
-        "UserDetailsApi": {}
-      },
       "storage": {
-        "userDetails": {}
+        "userDetails": {},
+        "recipeDatabase": {}
+      },
+      "api": {
+        "UserDetailsApi": {},
+        "RecipeDetailsApi": {}
       }
     }
   }

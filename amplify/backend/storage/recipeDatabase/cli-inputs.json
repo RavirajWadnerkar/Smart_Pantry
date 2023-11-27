@@ -1,0 +1,10 @@
+{
+  "resourceName": "recipeDatabase",
+  "tableName": "recipeTable",
+  "partitionKey": {
+    "fieldName": "recipeID",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

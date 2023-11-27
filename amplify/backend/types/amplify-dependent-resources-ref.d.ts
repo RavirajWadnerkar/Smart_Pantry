@@ -1,5 +1,10 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
+    "RecipeDetailsApi": {
+      "ApiId": "string",
+      "ApiName": "string",
+      "RootUrl": "string"
+    },
     "UserDetailsApi": {
       "ApiId": "string",
       "ApiName": "string",
@@ -18,6 +23,13 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "recipeDetailsLambda": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "saveUserDetails": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -27,6 +39,14 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
+    "recipeDatabase": {
+      "Arn": "string",
+      "Name": "string",
+      "PartitionKeyName": "string",
+      "PartitionKeyType": "string",
+      "Region": "string",
+      "StreamArn": "string"
+    },
     "userDetails": {
       "Arn": "string",
       "Name": "string",
