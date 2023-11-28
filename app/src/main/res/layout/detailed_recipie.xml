@@ -18,12 +18,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="236dp"
-        android:layout_height="171dp"
+        android:layout_width="78dp"
+        android:layout_height="103dp"
         android:scaleType="centerCrop"
         android:src="@drawable/pantry"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="55dp" />
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="123dp" />
 
     <TextView
         android:id="@+id/cookingTimeTextView"
@@ -33,7 +33,8 @@
         app:layout_constraintTop_toBottomOf="@id/recipeImageView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Cooking Time: 30 minutes"
+        android:text="Cooking Time:"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="289dp" />
 
@@ -45,7 +46,8 @@
         app:layout_constraintTop_toBottomOf="@id/cookingTimeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Ingredients: Ingredient 1, Ingredient 2, Ingredient 3"
+        android:text="Ingredients:"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="337dp" />
 
@@ -57,7 +59,8 @@
         app:layout_constraintTop_toBottomOf="@id/ingredientsTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Instructions: Step 1, Step 2, Step 3"
+        android:text="Instructions:"
+        android:textStyle="bold"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="382dp" />
 
