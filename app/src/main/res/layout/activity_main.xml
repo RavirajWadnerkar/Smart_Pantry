@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,22 +11,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
-        android:layout_marginBottom="570dp"
         android:fontFamily="cursive"
-        android:text="Welcome to Smart Pantry"
+        android:text="Welcome to Smart Pantry, explore recipes to cook your fav food"
         android:textAlignment="center"
         android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/sidebar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/nav_menu"/>
+        app:menu="@menu/nav_menu" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/exploreAllButton"
+        app:layout_constraintTop_toBottomOf="@id/textView3"
+
+
+        />
+
+    <Button
+        android:id="@+id/exploreAllButton"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:text="Explore All"
+        app:layout_constraintTop_toBottomOf="@id/recipesRecyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="570dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="150dp"
+        android:layout_marginLeft="150dp"
+
+        />
 
 </androidx.drawerlayout.widget.DrawerLayout>

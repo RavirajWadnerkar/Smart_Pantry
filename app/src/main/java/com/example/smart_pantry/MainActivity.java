@@ -4,20 +4,29 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.amplifyframework.auth.cognito.result.AWSCognitoAuthSignOutResult;
 import com.amplifyframework.auth.cognito.result.GlobalSignOutError;
 import com.amplifyframework.auth.cognito.result.HostedUIError;
 import com.amplifyframework.auth.cognito.result.RevokeTokenError;
+import com.example.smart_pantry.Adapter.CardAdapter;
+import com.example.smart_pantry.model.Card;
 import com.google.android.material.navigation.NavigationView;
 
 import com.amplifyframework.core.Amplify;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        RecyclerView recyclerView = findViewById(R.id.recipesRecyclerView);
 
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -59,7 +69,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        List<Card> cardItems = new ArrayList<>();
+        cardItems.add(new Card(R.drawable.bg, "Card 1"));
+        cardItems.add(new Card(R.drawable.bg, "Card 2"));
+        cardItems.add(new Card(R.drawable.bg, "Card 3"));
+        cardItems.add(new Card(R.drawable.bg, "Card 4"));
+
         // Create and set the adapter
+        CardAdapter cardAdapter = new CardAdapter(this, cardItems);
+        recyclerView.setAdapter(cardAdapter);
+
+        // Set the layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -70,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void logout() {
         Amplify.Auth.signOut(
@@ -108,5 +132,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }
