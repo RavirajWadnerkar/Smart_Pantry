@@ -12,11 +12,12 @@
         android:id="@+id/SmartKitchen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="80dp"
+        android:layout_marginLeft="100dp"
         android:layout_marginTop="180dp"
-        android:text="Smart Kitchen"
+        android:text="Smart Pantry"
+        android:fontFamily="cursive"
         android:textColor="#F1F1F1"
-        android:textSize="40dp"
+        android:textSize="50dp"
         android:textStyle="bold" />
 
     <Button
@@ -26,7 +27,7 @@
         android:layout_below="@+id/SmartKitchen"
         android:layout_marginLeft="160dp"
         android:layout_marginTop="90dp"
-        android:backgroundTint="#E91E63"
+        android:backgroundTint="#302E2E"
         android:paddingHorizontal="16dp"
         android:paddingVertical="10dp"
         android:text="Login"
@@ -39,10 +40,10 @@
         android:layout_below="@+id/buttonLogin"
         android:layout_marginLeft="160dp"
         android:layout_marginTop="40dp"
-        android:backgroundTint="#FF5722"
+        android:backgroundTint="#EDEBEA"
         android:paddingHorizontal="16dp"
         android:paddingVertical="10dp"
         android:text="Register"
-        android:textColor="@color/white" />
+        android:textColor="@color/black" />
 
 </RelativeLayout>
