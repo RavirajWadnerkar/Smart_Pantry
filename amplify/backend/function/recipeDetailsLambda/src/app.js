@@ -55,65 +55,117 @@ const convertUrlType = (param, type) => {
   }
 }
 
+ async function getUserPreference (){
+  const ddbClient = new DynamoDBClient({ region: 'us-west-1' });
+  const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);  
+  
+  var params = {
+    TableName: 'userDetails-dev',
+    Select: 'ALL_ATTRIBUTES',
+  }
+  const {Items} = await ddbDocClient.send(new ScanCommand(params));
+  const userPerferenceData= Items[0]['userPreferenceData'];
+  console.log(userPerferenceData['cuisine']);
+  return {
+    'cuisine': userPerferenceData['cuisine'],
+    'is_veg': userPerferenceData['veg']
+  };
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 /************************************
 * HTTP Get method to list objects *
 ************************************/
 
 app.get(path, async function(req, res) {
+  
+  const userPerferenceData = await getUserPreference();
+  console.log("UserDetails",userPerferenceData);  
 
   // TODO: Replace globalIngredients with MLModel Output Ingredients Data
-  let globalIngredients = ['salt', 'wheat', 'water', 'ghee'];
-  const getAllSubsets =
-        theArray => theArray.reduce(
-          (subsets, value) => subsets.concat(
-           subsets.map(set => [value,...set])
-          ),
-          [[]]
-        );
-  const allSubset = getAllSubsets(globalIngredients);
+  const ingredients = ['salt', 'wheat', 'water', 'ghee'];
   const result = [];
 
-  for (let k = 1; k < allSubset.length; k++){
-    const ingredients = allSubset[k];
-    if(ingredients.length < 4){
-      continue;
-    }
-
-    let filterExpression = '';
-    for (let i = 0; i < ingredients.length; i++) {
-      filterExpression += 'contains (cleanedIngredients, :item_'+i +')';
-      if (i < ingredients.length-1){
-        filterExpression += ' and ';
-      }
-    }
-    let expressionAttributeValues = {};
-    for (let i = 0; i < ingredients.length; i++) {
-      expressionAttributeValues[':item_'+i] = ingredients[i];
-    }
-
-    var params = {
-      TableName: tableName,
-      Select: 'ALL_ATTRIBUTES',
-      FilterExpression: filterExpression,
-      ExpressionAttributeValues: expressionAttributeValues
-    };
-
-    try {
-      const {Items} = await ddbDocClient.send(new ScanCommand(params));
-      const filteredItem = Items.filter((item) => {
-        let cleanIng = item['cleanedIngredients'].split(",")
-        return cleanIng.length == ingredients.length
-        });
-        console.log(filteredItem);
-      result.push(filteredItem);
-    } catch (err) {
-      console.log({error: 'Could not load items: ' + err.message});
-       res.statusCode = 500;
-       res.json({error: 'Could not load items: ' + err.message});
-      break;
+  let filterExpression = '';
+  for (let i = 0; i < ingredients.length; i++) {
+    filterExpression += 'contains (cleanedIngredients, :item_'+i +')';
+    if (i < ingredients.length-1){
+      filterExpression += ' or ';
     }
   }
-  res.json(result);
+  filterExpression += ' and cuisine = :cuisine and isVeg = :isVeg';
+  
+  let expressionAttributeValues = {};
+  for (let i = 0; i < ingredients.length; i++) {
+    expressionAttributeValues[':item_'+i] = ingredients[i];
+  }
+  expressionAttributeValues[':cuisine'] = capitalizeFirstLetter(userPerferenceData['cuisine']);
+  expressionAttributeValues[':isVeg'] = userPerferenceData['is_veg'];
+
+  var params = {
+    TableName: tableName,
+    Select: 'ALL_ATTRIBUTES',
+    FilterExpression: filterExpression,
+    ExpressionAttributeValues: expressionAttributeValues
+  };
+  console.log(params);
+  const ingredientsSet = new Set(ingredients);
+  const recipes = {};
+  const itemsMapping = {};
+  
+  try {
+    const {Items} = await ddbDocClient.send(new ScanCommand(params));
+    console.log(Items);
+    for(let i =0; i < Items.length; i++){
+    const rowIngredients = Items[i]['cleanedIngredients'].split(",");
+    console.log(rowIngredients);
+    
+    let matching = 0;
+    for(let j =0; j < rowIngredients.length; j++){
+      if(ingredientsSet.has(rowIngredients[j])){
+        matching +=1;
+      }
+    }
+    
+    recipes[Items[i]['recipeID']] = matching;
+    itemsMapping[Items[i]['recipeID']] = Items[i];
+    }
+    
+    // res.json(Items);
+    
+    let RecipeItems = Object.keys(recipes).map(
+      (recipeID) => { return [recipeID, recipes[recipeID]] });
+    RecipeItems.sort(
+      (first, second) => { return second[1] - first[1] }
+    );    
+    const matchingRecipeIds = RecipeItems.map((e) => { return e[0] }).slice(0,3);
+    console.log(recipes);
+    console.log(matchingRecipeIds);
+    
+    const result = matchingRecipeIds.map((recipeId) => {
+      let data = itemsMapping[recipeId];
+      return {
+        'totalTime': data['totalTimeInMins'],
+        'recipeName': data['translatedRecipeName'],
+        'ingredients' : data['translatedIngredients'],
+        'instructions' : data['translatedInstructions'],
+        'imageURL': data['imageURL']
+      };
+    });
+    
+    res.json(result);
+  } catch (err) {
+    console.log({error: 'Could not load items: ' + err.message});
+     res.statusCode = 500;
+     res.json({error: 'Could not load items: ' + err.message});
+     return
+  }
+  
+ 
+  
 });
 
 /************************************
