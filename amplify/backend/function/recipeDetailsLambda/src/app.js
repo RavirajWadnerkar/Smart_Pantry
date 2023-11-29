@@ -89,14 +89,13 @@ app.get(path, async function(req, res) {
   const ingredients = ['salt', 'wheat', 'water', 'ghee'];
   const result = [];
 
-  let filterExpression = '';
+  let filterExpression = 'cuisine = :cuisine and isVeg = :isVeg and ';
   for (let i = 0; i < ingredients.length; i++) {
     filterExpression += 'contains (cleanedIngredients, :item_'+i +')';
     if (i < ingredients.length-1){
       filterExpression += ' or ';
     }
-  }
-  filterExpression += ' and cuisine = :cuisine and isVeg = :isVeg';
+  }  
   
   let expressionAttributeValues = {};
   for (let i = 0; i < ingredients.length; i++) {
