@@ -36,6 +36,12 @@
             android:name=".MyPantry"
             android:exported="false"/>
         <activity
+            android:name=".DetailedRecipe"
+            android:exported="false"/>
+        <activity
+            android:name=".ExploreAll"
+            android:exported="false"/>
+        <activity
             android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>

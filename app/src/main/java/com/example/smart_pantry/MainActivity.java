@@ -34,12 +34,15 @@ public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
+    Button exploreAllbutton;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = findViewById(R.id.recipesRecyclerView);
+        exploreAllbutton = findViewById(R.id.exploreAllButton);
 
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -83,6 +86,15 @@ public class MainActivity extends AppCompatActivity {
         // Set the layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
+
+        exploreAllbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ExploreAll.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

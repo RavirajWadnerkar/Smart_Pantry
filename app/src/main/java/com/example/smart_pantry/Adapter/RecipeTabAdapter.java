@@ -13,32 +13,33 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smart_pantry.DetailedRecipe;
+import com.example.smart_pantry.ExploreAll;
 import com.example.smart_pantry.R;
 import com.example.smart_pantry.model.Card;
+import com.example.smart_pantry.model.RecipeTab;
 
 import java.util.List;
 
-public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
-    private Context context;
-    private List<Card> cardItems;
+public class RecipeTabAdapter extends RecyclerView.Adapter<RecipeTabAdapter.ViewHolder>{
 
-    public CardAdapter(Context context, List<Card> cardItems) {
+    private Context context;
+    private List<RecipeTab> recipeTabList;
+    public RecipeTabAdapter(Context context, List<RecipeTab> recipeTabList) {
         this.context = context;
-        this.cardItems = cardItems;
+        this.recipeTabList = recipeTabList;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_layout, parent, false);
-        return new ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_tab_layout, parent, false);
+        return new RecipeTabAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Card cardItem = cardItems.get(position);
-
-        holder.imageView.setImageResource(cardItem.getImageResource());
-        holder.textTitle.setText(cardItem.getTitle());
+        RecipeTab recipeTab = recipeTabList.get(position);
+        holder.textTitle.setText(recipeTab.getTitle());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,22 +50,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         });
     }
 
-
     @Override
     public int getItemCount() {
-        return cardItems.size();
+        return recipeTabList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
         TextView textTitle;
         CardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
-            textTitle = itemView.findViewById(R.id.textTitle);
-            cardView = itemView.findViewById(R.id.cardView);
+            textTitle = itemView.findViewById(R.id.recipeTextTitle);
+            cardView = itemView.findViewById(R.id.recipeCardView);
         }
     }
 }
