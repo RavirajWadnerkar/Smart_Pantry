@@ -81,7 +81,7 @@ app.get(path, async function(req, res) {
 
     let filterExpression = '';
     for (let i = 0; i < ingredients.length; i++) {
-      filterExpression += 'contains (CleanedIngredients, :item_'+i +')';
+      filterExpression += 'contains (cleanedIngredients, :item_'+i +')';
       if (i < ingredients.length-1){
         filterExpression += ' and ';
       }
@@ -101,7 +101,7 @@ app.get(path, async function(req, res) {
     try {
       const {Items} = await ddbDocClient.send(new ScanCommand(params));
       const filteredItem = Items.filter((item) => {
-        let cleanIng = item['CleanedIngredients'].split(",")
+        let cleanIng = item['cleanedIngredients'].split(",")
         return cleanIng.length == ingredients.length
         });
         console.log(filteredItem);
