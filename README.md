@@ -14,7 +14,29 @@ Project Introduction:
 Introducing Smart Pantry,the innovative mobile application that transforms kitchen management by blending the convenience of IoT with the robust capabilities of cloud services. Our system features a Raspberry Pi with a camera to scan and identify ingredients in your kitchen, smoothly integrated with AWS IoT Core for immediate data capture. Leveraging Amazon Rekognition, the app adeptly organizes pantry items and suggests recipes aligned with your food preferences. The architecture upholds secure access through Amazon Cognito, while AWS Lambda and DynamoDB work in tandem, processing inputs to customize your culinary journey. Smart Pantry simplifies meal preparation by utilizing what's available or inspiring new recipes that cater to your palate, making it your essential kitchen partner.
 
 
-Sample Demo Screenshots
+Sample Demo Screenshots of the App
+
+Landing Page
+
+<img width="345" alt="image" src="https://github.com/avidhi2100/Smart_Pantry/assets/144417727/45f5f182-e734-4fd8-8a22-dcbfe09d3d79">
+
+Login Page
+
+<img width="345" alt="image" src="https://github.com/avidhi2100/Smart_Pantry/assets/144417727/1bc48825-5853-40a9-9564-3aac82dffcfc">
+
+Register
+
+<img width="345" alt="image" src="https://github.com/avidhi2100/Smart_Pantry/assets/144417727/83ec5757-f26f-4911-b529-69d9f33209a5">
+
+HomePage with recipe based on your food preference
+
+<img width="401" alt="image" src="https://github.com/avidhi2100/Smart_Pantry/assets/144417727/e8f97b20-2081-463b-973e-948596b597eb">
+
+Recipi List based on the ingredients
+
+
+
+
 
 Pre-requisites Set Up
 AWS Setup
