@@ -13,7 +13,7 @@
 - **Download the app** : [Download App](https://main.dtut8i3i124b5.amplifyapp.com/)
 
 ## Project Introduction:
-Introducing Smart Pantry, the innovative mobile application that transforms kitchen management by blending the convenience of IoT with the robust capabilities of cloud services. Our system features a Raspberry Pi with a camera to scan and identify ingredients in your kitchen, smoothly integrated with AWS IoT Core for immediate data capture. Leveraging Amazon Rekognition, the app adeptly organizes pantry items and suggests recipes aligned with your food preferences. The architecture upholds secure access through Amazon Cognito, while AWS Lambda and DynamoDB work in tandem, processing inputs to customize your culinary journey. Smart Pantry simplifies meal preparation by utilizing what's available or inspiring new recipes that cater to your palate, making it your essential kitchen partner.
+Introducing **Smart Pantry**, the innovative mobile application that transforms kitchen management by blending the convenience of IoT with the robust capabilities of cloud services. Our system features a Raspberry Pi with a camera to scan and identify ingredients in your kitchen, smoothly integrated with AWS IoT Core for immediate data capture. Leveraging Amazon Rekognition, the app adeptly organizes pantry items and suggests recipes aligned with your food preferences. The architecture upholds secure access through Amazon Cognito, while AWS Lambda and DynamoDB work in tandem, processing inputs to customize your culinary journey. Smart Pantry simplifies meal preparation by utilizing what's available or inspiring new recipes that cater to your palate, making it your essential kitchen partner.
 
 
 ## Features List:
