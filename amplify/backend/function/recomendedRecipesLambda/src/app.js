@@ -1,3 +1,5 @@
+Recommend recipe API
+
 /*
 Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
@@ -28,7 +30,7 @@ const partitionKeyType = "S";
 const sortKeyName = "";
 const sortKeyType = "";
 const hasSortKey = sortKeyName !== "";
-const path = "/recrecipes";
+const path = "/recipe";
 const UNAUTH = 'UNAUTH';
 const hashKeyPath = '/:' + partitionKeyName;
 const sortKeyPath = hasSortKey ? '/:' + sortKeyName : '';
@@ -55,23 +57,116 @@ const convertUrlType = (param, type) => {
   }
 }
 
+ async function getUserPreference (){
+  const ddbClient = new DynamoDBClient({ region: 'us-west-1' });
+  const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);  
+  
+  var params = {
+    TableName: 'userDetails-dev',
+    Select: 'ALL_ATTRIBUTES',
+  }
+  const {Items} = await ddbDocClient.send(new ScanCommand(params));
+  const userPerferenceData= Items[0]['userPreferenceData'];
+  console.log(userPerferenceData['cuisine']);
+  return {
+    'cuisine': userPerferenceData['cuisine'],
+    'is_veg': userPerferenceData['veg']
+  };
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 /************************************
 * HTTP Get method to list objects *
 ************************************/
 
 app.get(path, async function(req, res) {
+  
+  const userPerferenceData = await getUserPreference();
+  console.log("UserDetails",userPerferenceData);  
+
+  // TODO: Replace globalIngredients with MLModel Output Ingredients Data
+  const ingredients = ['salt', 'wheat', 'water', 'ghee'];
+  const result = [];
+
+  let filterExpression = 'cuisine = :cuisine and isVeg = :isVeg and ';
+  for (let i = 0; i < ingredients.length; i++) {
+    filterExpression += 'contains (cleanedIngredients, :item_'+i +')';
+    if (i < ingredients.length-1){
+      filterExpression += ' or ';
+    }
+  }  
+  
+  let expressionAttributeValues = {};
+  for (let i = 0; i < ingredients.length; i++) {
+    expressionAttributeValues[':item_'+i] = ingredients[i];
+  }
+  expressionAttributeValues[':cuisine'] = capitalizeFirstLetter(userPerferenceData['cuisine']);
+  expressionAttributeValues[':isVeg'] = userPerferenceData['is_veg'];
+
   var params = {
     TableName: tableName,
     Select: 'ALL_ATTRIBUTES',
+    FilterExpression: filterExpression,
+    ExpressionAttributeValues: expressionAttributeValues
   };
-
+  console.log(params);
+  const ingredientsSet = new Set(ingredients);
+  const recipes = {};
+  const itemsMapping = {};
+  
   try {
-    const data = await ddbDocClient.send(new ScanCommand(params));
-    res.json(data.Items);
+    const {Items} = await ddbDocClient.send(new ScanCommand(params));
+    console.log(Items);
+    for(let i =0; i < Items.length; i++){
+    const rowIngredients = Items[i]['cleanedIngredients'].split(",");
+    console.log(rowIngredients);
+    
+    let matching = 0;
+    for(let j =0; j < rowIngredients.length; j++){
+      if(ingredientsSet.has(rowIngredients[j])){
+        matching +=1;
+      }
+    }
+    
+    recipes[Items[i]['recipeID']] = matching;
+    itemsMapping[Items[i]['recipeID']] = Items[i];
+    }
+    
+    // res.json(Items);
+    
+    let RecipeItems = Object.keys(recipes).map(
+      (recipeID) => { return [recipeID, recipes[recipeID]] });
+    RecipeItems.sort(
+      (first, second) => { return second[1] - first[1] }
+    );    
+    const matchingRecipeIds = RecipeItems.map((e) => { return e[0] }).slice(0,3);
+    console.log(recipes);
+    console.log(matchingRecipeIds);
+    
+    const result = matchingRecipeIds.map((recipeId) => {
+      let data = itemsMapping[recipeId];
+      return {
+        'totalTime': data['totalTimeInMins'],
+        'recipeName': data['translatedRecipeName'],
+        'ingredients' : data['translatedIngredients'],
+        'instructions' : data['translatedInstructions'],
+        'imageURL': data['imageURL']
+      };
+    });
+    
+    res.json(result);
   } catch (err) {
-    res.statusCode = 500;
-    res.json({error: 'Could not load items: ' + err.message});
+    console.log({error: 'Could not load items: ' + err.message});
+     res.statusCode = 500;
+     res.json({error: 'Could not load items: ' + err.message});
+     return
   }
+  
+ 
+  
 });
 
 /************************************
