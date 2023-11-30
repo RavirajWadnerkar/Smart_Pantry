@@ -1,3 +1,5 @@
+General recipe API
+
 /*
 Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
@@ -28,7 +30,7 @@ const partitionKeyType = "S";
 const sortKeyName = "";
 const sortKeyType = "";
 const hasSortKey = sortKeyName !== "";
-const path = "/genrecipes";
+const path = "/grecipes";
 const UNAUTH = 'UNAUTH';
 const hashKeyPath = '/:' + partitionKeyName;
 const sortKeyPath = hasSortKey ? '/:' + sortKeyName : '';
@@ -55,19 +57,64 @@ const convertUrlType = (param, type) => {
   }
 }
 
+ async function getUserPreference (){
+  const ddbClient = new DynamoDBClient({ region: 'us-west-1' });
+  const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);  
+  
+  var params = {
+    TableName: 'userDetails-dev',
+    Select: 'ALL_ATTRIBUTES',
+  }
+  const {Items} = await ddbDocClient.send(new ScanCommand(params));
+  const userPerferenceData= Items[0]['userPreferenceData'];
+  console.log(userPerferenceData['cuisine']);
+  return {
+    'cuisine': userPerferenceData['cuisine'],
+    'is_veg': userPerferenceData['veg']
+  };
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 /************************************
 * HTTP Get method to list objects *
 ************************************/
 
 app.get(path, async function(req, res) {
+  
+  const userPerferenceData = await getUserPreference();
+  console.log("UserDetails",userPerferenceData);  
+  
+  let filterExpression = 'cuisine = :cuisine and isVeg = :isVeg';
+  let expressionAttributeValues = {};
+  expressionAttributeValues[':cuisine'] = capitalizeFirstLetter(userPerferenceData['cuisine']);
+  expressionAttributeValues[':isVeg'] = userPerferenceData['is_veg'].toString().toUpperCase();  
+   
+   
   var params = {
     TableName: tableName,
     Select: 'ALL_ATTRIBUTES',
+    FilterExpression: filterExpression,
+    ExpressionAttributeValues: expressionAttributeValues    
   };
+  
+  console.log(params);
 
   try {
-    const data = await ddbDocClient.send(new ScanCommand(params));
-    res.json(data.Items);
+    const {Items} = await ddbDocClient.send(new ScanCommand(params));
+    console.log(Items);
+    const result = Items.slice(0,5).map((data) => {
+      return {
+        'totalTime': data['totalTimeInMins'],
+        'recipeName': data['translatedRecipeName'],
+        'ingredients' : data['translatedIngredients'],
+        'instructions' : data['translatedInstructions'],
+        'imageURL': data['imageURL']
+      };
+    });    
+    res.json(result);
   } catch (err) {
     res.statusCode = 500;
     res.json({error: 'Could not load items: ' + err.message});
