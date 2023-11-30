@@ -30,7 +30,7 @@ def detect_custom_labels(bucket_name, file_key):
     
     response = rekognition_client.detect_custom_labels(
         Image={'S3Object': {'Bucket': bucket_name, 'Name': file_key}},
-        ProjectVersionArn='arn:aws:rekognition:us-east-1:702549225640:project/SmartPantryProject/version/SmartPantryProject.2023-11-30T00.54.27/1701334467612',
+        ProjectVersionArn='Model_ARN',
     )
 
     print("Response:", response)
