@@ -81,7 +81,7 @@ public class UserPreference extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
 
-                Amplify.API.post(options,
+                Amplify.API.post("UserDetailsAPi",options,
                         response -> {
                             Log.i("MyAmplifyApp", "POST succeeded: " + response);
                             Intent intent =  new Intent(getApplicationContext(), MainActivity.class);

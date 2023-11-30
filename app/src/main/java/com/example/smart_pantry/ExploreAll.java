@@ -12,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smart_pantry.Adapter.CardAdapter;
 import com.example.smart_pantry.Adapter.RecipeTabAdapter;
 import com.example.smart_pantry.model.Card;
+import com.example.smart_pantry.model.Recipe;
 import com.example.smart_pantry.model.RecipeTab;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,7 @@ import java.util.Objects;
 
 public class ExploreAll extends AppCompatActivity {
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "NewApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,11 +32,14 @@ public class ExploreAll extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.exploreAllRecyclerView);
 
+        Intent intent = getIntent();
+        Recipe[] recipes = (Recipe[]) intent.getSerializableExtra("recipes");
+
+
         List<RecipeTab> recipeTabList = new ArrayList<>();
-        recipeTabList.add(new RecipeTab( "Card 1"));
-        recipeTabList.add(new RecipeTab("Card 2"));
-        recipeTabList.add(new RecipeTab("Card 3"));
-        recipeTabList.add(new RecipeTab("Card 4"));
+        for(int i=0; i<recipes.length; i++) {
+            recipeTabList.add(new RecipeTab( recipes[i].getRecipeName()));
+        }
 
         // Create and set the adapter
         RecipeTabAdapter recipeTabAdapter = new RecipeTabAdapter(this, recipeTabList);

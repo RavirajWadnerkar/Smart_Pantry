@@ -49,6 +49,8 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.73.0'
     implementation 'com.amazonaws:aws-android-sdk-apigateway-core:2.3.2'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
 
 
 

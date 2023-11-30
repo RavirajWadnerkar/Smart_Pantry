@@ -21,7 +21,7 @@
             android:layout_height="300dp"
             android:contentDescription="Card Image"
             android:scaleType="centerCrop"
-            android:src="@drawable/bg" />
+            android:src="@drawable/smartpantrybg" />
 
         <TextView
             android:id="@+id/textTitle"

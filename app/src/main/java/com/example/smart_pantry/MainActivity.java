@@ -15,17 +15,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.amplifyframework.api.rest.RestOptions;
 import com.amplifyframework.auth.cognito.result.AWSCognitoAuthSignOutResult;
 import com.amplifyframework.auth.cognito.result.GlobalSignOutError;
 import com.amplifyframework.auth.cognito.result.HostedUIError;
 import com.amplifyframework.auth.cognito.result.RevokeTokenError;
 import com.example.smart_pantry.Adapter.CardAdapter;
 import com.example.smart_pantry.model.Card;
+import com.example.smart_pantry.model.Recipe;
+import com.example.smart_pantry.model.UserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.navigation.NavigationView;
 
 import com.amplifyframework.core.Amplify;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -41,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView recyclerView = findViewById(R.id.recipesRecyclerView);
         exploreAllbutton = findViewById(R.id.exploreAllButton);
 
 
@@ -70,27 +75,52 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawers();
             return true;
         });
-
-
-
         List<Card> cardItems = new ArrayList<>();
-        cardItems.add(new Card(R.drawable.bg, "Card 1"));
-        cardItems.add(new Card(R.drawable.bg, "Card 2"));
-        cardItems.add(new Card(R.drawable.bg, "Card 3"));
-        cardItems.add(new Card(R.drawable.bg, "Card 4"));
+        RestOptions options = RestOptions.builder()
+                .addPath("/recipe").build();
+        final Recipe[][] recipe = new Recipe[1][1];
 
-        // Create and set the adapter
-        CardAdapter cardAdapter = new CardAdapter(this, cardItems);
-        recyclerView.setAdapter(cardAdapter);
+        Amplify.API.get("RecipeDetailsApi", options,
+                response -> {
+                    runOnUiThread(() -> {
+                        Log.i("MyAmplifyApp", "GET succeeded: " + response);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        try {
+                            recipe[0] = objectMapper.readValue(response.getData().asString(), Recipe[].class);
+                            if (recipe[0].length < 4) {
+                                for (Recipe r : recipe[0]) {
+                                    cardItems.add(new Card(r.getImageURL(), r.getRecipeName(),r));
+                                }
+                            } else {
+                                for (int i = 0; i < 4; i++) {
+                                    cardItems.add(new Card(recipe[0][i].getImageURL(), recipe[0][i].getRecipeName(),recipe[0][1]));
+                                }
+                            }
 
-        // Set the layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+                            RecyclerView recyclerView = findViewById(R.id.recipesRecyclerView);
+                            CardAdapter cardAdapter = new CardAdapter(this, cardItems);
+                            recyclerView.setAdapter(cardAdapter);
+
+                            // Set the layout manager
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                            recyclerView.setLayoutManager(layoutManager);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                },
+                apiFailure -> {
+                    runOnUiThread(() -> {
+                        Log.i("MyAmplifyApp", "GET failed: " + apiFailure);
+                    });
+                });
+
 
         exploreAllbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ExploreAll.class);
+                intent.putExtra("recipes", recipe[0]);
                 startActivity(intent);
             }
         });

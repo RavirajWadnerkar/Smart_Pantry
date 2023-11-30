@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ public class Profile extends AppCompatActivity {
 
         RestOptions options = RestOptions.builder()
                 .addPath("/preference").build();
-        Amplify.API.get(options,
+        Amplify.API.get("UserDetailsApi",options,
                 response -> {
                     Log.i("MyAmplifyApp", "GET succeeded: " + response);
                     ObjectMapper objectMapper = new ObjectMapper();
@@ -62,6 +63,15 @@ public class Profile extends AppCompatActivity {
                 apiFailure -> {
                     Log.i("MyAmplifyApp", "GET failed: " + apiFailure);
                 });
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), UserPreference.class);
+                intent.putExtra("name",name.getText());
+                intent.putExtra("email",email.getText());
+                startActivity(intent);
+            }
+        });
 
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

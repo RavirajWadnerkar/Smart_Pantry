@@ -2,10 +2,13 @@ package com.example.smart_pantry;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.amplifyframework.core.Amplify;
 
 public class SplashScreen extends AppCompatActivity {
     private Button buttonLogin, buttonRegister;
@@ -13,8 +16,14 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
 
+        Amplify.Auth.getCurrentUser(user -> {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }, error ->{
+            Log.i("MyAmplifyApp", "Error in fetching current user" + error);
+                });
+        setContentView(R.layout.activity_splash_screen);
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }

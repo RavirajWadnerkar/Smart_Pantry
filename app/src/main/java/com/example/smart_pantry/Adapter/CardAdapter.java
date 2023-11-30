@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smart_pantry.DetailedRecipe;
 import com.example.smart_pantry.R;
 import com.example.smart_pantry.model.Card;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -36,14 +37,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Card cardItem = cardItems.get(position);
+        String imageUrl = cardItem.getImageResource();
 
-        holder.imageView.setImageResource(cardItem.getImageResource());
+        Picasso.get().load(imageUrl).into(holder.imageView);
         holder.textTitle.setText(cardItem.getTitle());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context context = holder.itemView.getContext();
                 Intent intent = new Intent(context, DetailedRecipe.class);
+                intent.putExtra("recipe",cardItem.getRecipe());
                 context.startActivity(intent);
             }
         });
