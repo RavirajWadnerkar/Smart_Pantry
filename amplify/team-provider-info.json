@@ -32,15 +32,21 @@
         "recomendedRecipesLambda": {
           "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
           "s3Key": "amplify-builds/recomendedRecipesLambda-4f734a4e647777515663-build.zip"
+        },
+        "fetchMyPantryItems": {
+          "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
+          "s3Key": "amplify-builds/fetchMyPantryItems-774b7764324c76377655-build.zip"
         }
       },
       "storage": {
         "userDetails": {},
-        "recipeDatabase": {}
+        "recipeDatabase": {},
+        "mypantry": {}
       },
       "api": {
         "UserDetailsApi": {},
-        "fetchRecipes": {}
+        "fetchRecipes": {},
+        "mypantryAPI": {}
       },
       "hosting": {
         "amplifyhosting": {

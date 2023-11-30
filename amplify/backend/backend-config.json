@@ -35,6 +35,20 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
+    },
+    "mypantryAPI": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "fetchMyPantryItems"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
     }
   },
   "auth": {
@@ -67,6 +81,25 @@
     }
   },
   "function": {
+    "fetchMyPantryItems": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "mypantry"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "generalRecipesLambda": {
       "build": true,
       "dependsOn": [
@@ -152,6 +185,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_fetchMyPantryItems_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "fetchMyPantryItems"
+        }
+      ]
+    },
+    "AMPLIFY_function_fetchMyPantryItems_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "fetchMyPantryItems"
+        }
+      ]
+    },
     "AMPLIFY_function_generalRecipesLambda_deploymentBucketName": {
       "usedBy": [
         {
@@ -234,6 +283,10 @@
     }
   },
   "storage": {
+    "mypantry": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
     "recipeDatabase": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"

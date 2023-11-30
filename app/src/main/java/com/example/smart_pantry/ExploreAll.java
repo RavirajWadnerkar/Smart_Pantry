@@ -38,7 +38,7 @@ public class ExploreAll extends AppCompatActivity {
 
         List<RecipeTab> recipeTabList = new ArrayList<>();
         for(int i=0; i<recipes.length; i++) {
-            recipeTabList.add(new RecipeTab( recipes[i].getRecipeName()));
+            recipeTabList.add(new RecipeTab( recipes[i].getRecipeName(), recipes[i]));
         }
 
         // Create and set the adapter

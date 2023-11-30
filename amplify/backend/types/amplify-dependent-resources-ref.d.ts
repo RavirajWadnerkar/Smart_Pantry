@@ -9,6 +9,11 @@ export type AmplifyDependentResourcesAttributes = {
       "ApiId": "string",
       "ApiName": "string",
       "RootUrl": "string"
+    },
+    "mypantryAPI": {
+      "ApiId": "string",
+      "ApiName": "string",
+      "RootUrl": "string"
     }
   },
   "auth": {
@@ -23,6 +28,13 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "fetchMyPantryItems": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "generalRecipesLambda": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -53,6 +65,14 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
+    "mypantry": {
+      "Arn": "string",
+      "Name": "string",
+      "PartitionKeyName": "string",
+      "PartitionKeyType": "string",
+      "Region": "string",
+      "StreamArn": "string"
+    },
     "recipeDatabase": {
       "Arn": "string",
       "Name": "string",

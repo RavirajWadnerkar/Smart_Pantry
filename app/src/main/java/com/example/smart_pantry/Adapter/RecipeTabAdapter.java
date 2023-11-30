@@ -17,6 +17,7 @@ import com.example.smart_pantry.ExploreAll;
 import com.example.smart_pantry.R;
 import com.example.smart_pantry.model.Card;
 import com.example.smart_pantry.model.RecipeTab;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class RecipeTabAdapter extends RecyclerView.Adapter<RecipeTabAdapter.View
             public void onClick(View view) {
                 Context context = holder.itemView.getContext();
                 Intent intent = new Intent(context, DetailedRecipe.class);
+                intent.putExtra("recipe",recipeTab.getRecipe());
                 context.startActivity(intent);
             }
         });

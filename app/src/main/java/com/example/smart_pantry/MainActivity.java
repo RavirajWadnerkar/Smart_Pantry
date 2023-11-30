@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             } else {
                                 for (int i = 0; i < 4; i++) {
-                                    cardItems.add(new Card(recipe[0][i].getImageURL(), recipe[0][i].getRecipeName(),recipe[0][1]));
+                                    cardItems.add(new Card(recipe[0][i].getImageURL(), recipe[0][i].getRecipeName(),recipe[0][i]));
                                 }
                             }
 
