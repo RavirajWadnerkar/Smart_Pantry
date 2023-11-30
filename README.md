@@ -3,7 +3,7 @@
 
 - **University Name**: [San Jose State University](http://www.sjsu.edu/)
 
-- **Course**: CMPE-281 Cloud Technologies
+- **Course**: [CMPE-281 Cloud Technologies](https://catalog.sjsu.edu/preview_course_nopop.php?catoid=13&coid=116077)
 
 - **Professor**: [Sanjay Garje ](https://www.linkedin.com/in/sanjaygarje/)
 
