@@ -55,7 +55,7 @@ Image clicked from the camera module athat got saved into S3 bucket
 <img width="655" alt="image" src="https://github.com/avidhi2100/Smart_Pantry/assets/143249088/e4c75b22-c2e9-417a-a44e-01a75f316f7a">
 
 # Architechture Diagram
-<img width="860" alt="image" src="https://github.com/avidhi2100/Smart_Pantry/assets/144417727/9414bbb8-8af2-49f4-997b-ddfaec8bfb7f">
+<img width="655" alt="image" src="https://github.com/avidhi2100/Smart_Pantry/assets/143249088/4ecbe4bc-c933-45d6-92dd-ab36b463b24f">
 
 # Pre-requisites Set Up
  1. AWS Amplify: Create a android project in Android Studio and do amplify init to initialize the amplify project in the AWS account.
