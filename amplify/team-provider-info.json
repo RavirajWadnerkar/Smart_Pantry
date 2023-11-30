@@ -13,12 +13,6 @@
       "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-smartpantry-dev-04136-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
-      "hosting": {
-        "amplifyhosting": {
-          "appId": "dtut8i3i124b5",
-          "type": "manual"
-        }
-      },
       "auth": {
         "smartpantryc3c811e3": {}
       },
@@ -29,7 +23,15 @@
         },
         "recipeDetailsLambda": {
           "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
-          "s3Key": "amplify-builds/recipeDetailsLambda-74304e4359472b6e4a51-build.zip"
+          "s3Key": "amplify-builds/recipeDetailsLambda-656b68516a4e49655534-build.zip"
+        },
+        "generalRecipesLambda": {
+          "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
+          "s3Key": "amplify-builds/generalRecipesLambda-584f61505332444c7363-build.zip"
+        },
+        "recomendedRecipesLambda": {
+          "deploymentBucketName": "amplify-smartpantry-dev-04136-deployment",
+          "s3Key": "amplify-builds/recomendedRecipesLambda-4f734a4e647777515663-build.zip"
         }
       },
       "storage": {
@@ -38,7 +40,13 @@
       },
       "api": {
         "UserDetailsApi": {},
-        "RecipeDetailsApi": {}
+        "fetchRecipes": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dtut8i3i124b5",
+          "type": "cicd"
+        }
       }
     }
   }

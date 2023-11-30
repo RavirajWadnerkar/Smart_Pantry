@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "paths": {
+    "/genrecipes": {
+      "name": "/genrecipes",
+      "lambdaFunction": "generalRecipesLambda",
+      "permissions": {
+        "setting": "protected",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "guest": [
+          "create",
+          "read",
+          "update"
+        ]
+      }
+    },
+    "/recrecipes": {
+      "name": "/recrecipes",
+      "lambdaFunction": "recomendedRecipesLambda",
+      "permissions": {
+        "setting": "protected",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "guest": [
+          "create",
+          "read",
+          "update"
+        ]
+      }
+    }
+  }
+}

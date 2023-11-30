@@ -1,19 +1,5 @@
 {
   "api": {
-    "RecipeDetailsApi": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "recipeDetailsLambda"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    },
     "UserDetailsApi": {
       "dependsOn": [
         {
@@ -23,6 +9,28 @@
           ],
           "category": "function",
           "resourceName": "saveUserDetails"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "fetchRecipes": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "generalRecipesLambda"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "recomendedRecipesLambda"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -59,7 +67,45 @@
     }
   },
   "function": {
+    "generalRecipesLambda": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "recipeDatabase"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "recipeDetailsLambda": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "recipeDatabase"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "recomendedRecipesLambda": {
       "build": true,
       "dependsOn": [
         {
@@ -106,6 +152,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_generalRecipesLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generalRecipesLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_generalRecipesLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generalRecipesLambda"
+        }
+      ]
+    },
     "AMPLIFY_function_recipeDetailsLambda_deploymentBucketName": {
       "usedBy": [
         {
@@ -119,6 +181,22 @@
         {
           "category": "function",
           "resourceName": "recipeDetailsLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_recomendedRecipesLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "recomendedRecipesLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_recomendedRecipesLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "recomendedRecipesLambda"
         }
       ]
     },

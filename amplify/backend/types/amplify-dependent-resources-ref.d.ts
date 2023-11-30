@@ -1,11 +1,11 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
-    "RecipeDetailsApi": {
+    "UserDetailsApi": {
       "ApiId": "string",
       "ApiName": "string",
       "RootUrl": "string"
     },
-    "UserDetailsApi": {
+    "fetchRecipes": {
       "ApiId": "string",
       "ApiName": "string",
       "RootUrl": "string"
@@ -23,7 +23,21 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "generalRecipesLambda": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "recipeDetailsLambda": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "recomendedRecipesLambda": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

@@ -77,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
         });
         List<Card> cardItems = new ArrayList<>();
         RestOptions options = RestOptions.builder()
-                .addPath("/recipe").build();
+                .addPath("/genrecipes").build();
         final Recipe[][] recipe = new Recipe[1][1];
 
-        Amplify.API.get("RecipeDetailsApi", options,
+        Amplify.API.get("fetchRecipes", options,
                 response -> {
                     runOnUiThread(() -> {
                         Log.i("MyAmplifyApp", "GET succeeded: " + response);
