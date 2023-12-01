@@ -1,4 +1,3 @@
-
 import json
 import boto3
 import uuid
@@ -9,7 +8,7 @@ from urllib.parse import quote, unquote
 s3_client = boto3.client('s3')
 rekognition_client = boto3.client('rekognition')
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('pantryTable')
+table = dynamodb.Table('Your_Table_Name')
 
 
 def extract_user_email(file_key):
@@ -24,13 +23,12 @@ def extract_user_email(file_key):
 
 def detect_custom_labels(bucket_name, file_key):
     print("GOT HERE")
-    # file_key=file_key.replace("%40","@")
-    file_key='mp1.jpeg'
+    file_key=file_key.replace("%40","@")
     print({'Bucket': bucket_name, 'Name': file_key})
     
     response = rekognition_client.detect_custom_labels(
         Image={'S3Object': {'Bucket': bucket_name, 'Name': file_key}},
-        ProjectVersionArn='Model_ARN',
+        ProjectVersionArn='Your_Model_Arn',
     )
 
     print("Response:", response)
@@ -79,7 +77,7 @@ def create_new_record(user_email, file_key, upload_time, bucket_name):
         Item={
             'UserEmail': user_email,
             'FileName': file_key.split('/')[-1],
-            'LabelsList': set(labels_list),
+            'LabelsList':labels_list,
             'UploadTime': upload_time,
         }
     )
@@ -91,7 +89,7 @@ def update_existing_record(existing_record, file_key, upload_time, bucket_name):
         Key={'UserEmail': existing_record['UserEmail']},
         UpdateExpression='SET LabelsList = :labels, UploadTime = :time, FileName = :filename',
         ExpressionAttributeValues={
-            ':labels': set(new_labels),
+            ':labels':new_labels,
             ':time': upload_time,
             ':filename': file_key.split('/')[-1],
         }
