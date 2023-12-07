@@ -18,7 +18,7 @@ const partitionKeyType = "S";
 const sortKeyName = "";
 const sortKeyType = "";
 const hasSortKey = sortKeyName !== "";
-const path = "/recipe";
+const path = "/recrecipes";
 const UNAUTH = 'UNAUTH';
 const hashKeyPath = '/:' + partitionKeyName;
 const sortKeyPath = hasSortKey ? '/:' + sortKeyName : '';
@@ -44,11 +44,10 @@ const convertUrlType = (param, type) => {
       return param;
   }
 }
+async function getUserPreference (){
+  const ddbClient = new DynamoDBClient({ region: 'us-east-1' });
+  const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
 
- async function getUserPreference (){
-  const ddbClient = new DynamoDBClient({ region: 'us-west-1' });
-  const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);  
-  
   var params = {
     TableName: 'userDetails-dev',
     Select: 'ALL_ATTRIBUTES',
@@ -62,78 +61,88 @@ const convertUrlType = (param, type) => {
   };
 }
 
+async function getUserIngredients() {
+  const ddbClient = new DynamoDBClient({ region: 'us-east-1' });
+  const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
+  
+  var params = {
+    TableName: 'pantryTable-dev',
+    Select: 'ALL_ATTRIBUTES',
+  }
+  const {Items} = await ddbDocClient.send(new ScanCommand(params));
+  const labels= Items[0]['LabelsList'];
+  console.log(labels);
+  return labels;
+}
+
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
-
 /************************************
 * HTTP Get method to list objects *
 ************************************/
 
 app.get(path, async function(req, res) {
-  
   const userPerferenceData = await getUserPreference();
-  console.log("UserDetails",userPerferenceData);  
+    console.log("UserDetails",userPerferenceData);
 
-  // TODO: Replace globalIngredients with MLModel Output Ingredients Data
-  const ingredients = ['salt', 'wheat', 'water', 'ghee'];
-  const result = [];
+    // TODO: Replace globalIngredients with MLModel Output Ingredients Data
+    const ingredients = await getUserIngredients();
+    console.log("Ingredients",ingredients);
+    const result = [];
 
-  let filterExpression = 'cuisine = :cuisine and isVeg = :isVeg and ';
-  for (let i = 0; i < ingredients.length; i++) {
-    filterExpression += 'contains (cleanedIngredients, :item_'+i +')';
-    if (i < ingredients.length-1){
-      filterExpression += ' or ';
-    }
-  }  
-  
-  let expressionAttributeValues = {};
-  for (let i = 0; i < ingredients.length; i++) {
-    expressionAttributeValues[':item_'+i] = ingredients[i];
-  }
-  expressionAttributeValues[':cuisine'] = capitalizeFirstLetter(userPerferenceData['cuisine']);
-  expressionAttributeValues[':isVeg'] = userPerferenceData['is_veg'];
-
-  var params = {
-    TableName: tableName,
-    Select: 'ALL_ATTRIBUTES',
-    FilterExpression: filterExpression,
-    ExpressionAttributeValues: expressionAttributeValues
-  };
-  console.log(params);
-  const ingredientsSet = new Set(ingredients);
-  const recipes = {};
-  const itemsMapping = {};
-  
-  try {
-    const {Items} = await ddbDocClient.send(new ScanCommand(params));
-    console.log(Items);
-    for(let i =0; i < Items.length; i++){
-    const rowIngredients = Items[i]['cleanedIngredients'].split(",");
-    console.log(rowIngredients);
-    
-    let matching = 0;
-    for(let j =0; j < rowIngredients.length; j++){
-      if(ingredientsSet.has(rowIngredients[j])){
-        matching +=1;
+    let filterExpression = 'cuisine = :cuisine and isVeg = :isVeg and ';
+    for (let i = 0; i < ingredients.length; i++) {
+      filterExpression += 'contains (cleanedIngredients, :item_'+i +')';
+      if (i < ingredients.length-1){
+        filterExpression += ' or ';
       }
     }
-    
-    recipes[Items[i]['recipeID']] = matching;
-    itemsMapping[Items[i]['recipeID']] = Items[i];
+
+    let expressionAttributeValues = {};
+    for (let i = 0; i < ingredients.length; i++) {
+      expressionAttributeValues[':item_'+i] = ingredients[i];
     }
-    
-    // res.json(Items);
-    
+    expressionAttributeValues[':cuisine'] = capitalizeFirstLetter(userPerferenceData['cuisine']);
+    expressionAttributeValues[':isVeg'] = userPerferenceData['is_veg'].toString().toUpperCase();
+  var params = {
+      TableName: tableName,
+      Select: 'ALL_ATTRIBUTES',
+      FilterExpression: filterExpression,
+      ExpressionAttributeValues: expressionAttributeValues
+    };
+    console.log(params);
+    const ingredientsSet = new Set(ingredients);
+    const recipes = {};
+    const itemsMapping = {};
+  try {
+      const {Items} = await ddbDocClient.send(new ScanCommand(params));
+      console.log(Items);
+      for(let i =0; i < Items.length; i++){
+      const rowIngredients = Items[i]['cleanedIngredients'].split(",");
+      console.log(rowIngredients);
+
+      let matching = 0;
+      for(let j =0; j < rowIngredients.length; j++){
+        if(ingredientsSet.has(rowIngredients[j])){
+          matching +=1;
+        }
+      }
+
+      recipes[Items[i]['recipeID']] = matching;
+      itemsMapping[Items[i]['recipeID']] = Items[i];
+      }
+
+      // res.json(Items);
     let RecipeItems = Object.keys(recipes).map(
       (recipeID) => { return [recipeID, recipes[recipeID]] });
     RecipeItems.sort(
       (first, second) => { return second[1] - first[1] }
-    );    
+    );
     const matchingRecipeIds = RecipeItems.map((e) => { return e[0] }).slice(0,3);
     console.log(recipes);
     console.log(matchingRecipeIds);
-    
+
     const result = matchingRecipeIds.map((recipeId) => {
       let data = itemsMapping[recipeId];
       return {
@@ -144,17 +153,12 @@ app.get(path, async function(req, res) {
         'imageURL': data['imageURL']
       };
     });
-    
+
     res.json(result);
   } catch (err) {
-    console.log({error: 'Could not load items: ' + err.message});
-     res.statusCode = 500;
-     res.json({error: 'Could not load items: ' + err.message});
-     return
+    res.statusCode = 500;
+    res.json({error: 'Could not load items: ' + err.message});
   }
-  
- 
-  
 });
 
 /************************************
