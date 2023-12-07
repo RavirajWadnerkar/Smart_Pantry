@@ -37,17 +37,23 @@ public class MyPantry extends AppCompatActivity {
         List<String> ingredientsList = new ArrayList<>();
         Amplify.API.get("mypantryAPI",options,
                 response -> {
-                    Log.i("MyAmplifyApp", "GET succeeded: " + response);
-                    ingredientsList.add(response.getData().asString());
+                    runOnUiThread(() -> {
+                        Log.i("MyAmplifyApp", "GET succeeded: " + response);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        try {
+                            MyPantryInfo[] myPantryInfo = objectMapper.readValue(response.getData().asString(), MyPantryInfo[].class);
+                            MyPantryAdapter myPantryAdapter = new MyPantryAdapter(myPantryInfo[0].getLabels());
+                            recyclerView.setAdapter(myPantryAdapter);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 },
                 apiFailure -> {
                     Log.i("MyAmplifyApp", "GET failed: " + apiFailure);
                 });
-
-        MyPantryAdapter myPantryAdapter = new MyPantryAdapter(ingredientsList);
-        recyclerView.setAdapter(myPantryAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
     }
 
