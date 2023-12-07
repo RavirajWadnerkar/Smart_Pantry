@@ -43,7 +43,6 @@ def detect_custom_labels(bucket_name, file_key):
     print("Labels List:", labels_list)
 
     return labels_list
-    # return ['wheat','water','salt']
 
 def get_existing_record(user_email):
     response = table.query(
