@@ -1,0 +1,60 @@
+import boto3
+import base64
+from datetime import datetime
+
+def lambda_handler(event, context):
+    # Initialize S3 client
+    dynamodb_client = boto3.client('dynamodb')
+    s3_client = boto3.client('s3')
+    bucket_name = 'my-pantry-bucket'
+    
+    print(event)
+
+    # Extract image data from event (assuming it's base64 encoded)
+    image_data = event['image_data'] if 'image_data' in event else None
+    uuid = event['uuid']
+    jpeg_data = base64.b64decode(image_data)
+    
+    
+    if not image_data:
+        print("here")
+        return {
+            'statusCode': 400,
+            'body': 'No image data found'
+        }
+
+    try:
+        response = dynamodb_client.get_item(
+            TableName="user",
+            Key={'uuid': {'S': uuid}}
+        )
+        item = response.get('Item')
+        if not item:
+            return {
+                'statusCode': 404,
+                'body': 'UUID not found in DynamoDB'
+            }
+        email = item.get('email', {}).get('S')
+        print(f"Retrieved email: {email}")
+
+    except Exception as e:
+        print(f"Error fetching email from DynamoDB: {e}")
+        return {
+            'statusCode': 500,
+            'body': 'Internal Server Error'
+        }
+        
+    
+
+    # Generate a unique file name (for example, using the current timestamp)
+    file_name = email+'_' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+    print(file_name)
+
+    # Save the image to S3
+    s3_client.put_object( Bucket=bucket_name, Key=file_name, Body=jpeg_data, ContentType='image/jpg')
+
+    return {
+        'statusCode': 200,
+        'body': 'Image stored in S3'
+    }
+
