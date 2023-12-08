@@ -32,6 +32,8 @@ Introducing **Smart Pantry**, the innovative mobile application that transforms 
 1. Android Studio
 2. Raspbian OS
 3. AWS CLI
+4. Custom Dataset for Enhanced Rekognition Training
+   
 ## Hardware Components Used
 1. Raspberry Pi 4B
 2. Camera Module
